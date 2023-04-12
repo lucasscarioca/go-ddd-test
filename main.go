@@ -6,36 +6,24 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/lucasscarioca/music-stash-server/configs"
+	"github.com/lucasscarioca/music-stash-server/routes"
 )
 
-const PORT = ":3000"
-
 func main() {
-	s := createNewServer()
-	s.mountHandlers()
-	fmt.Printf("🚀 Server running on localhost%s\n", PORT)
-	http.ListenAndServe(PORT, s.Router)
-}
+	err := configs.Load()
+	if err != nil {
+		panic("Failed to load environment variables: " + err.Error())
+	}
 
-func helloWorld(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World!"))
-}
+	app := chi.NewRouter()
 
-type Server struct {
-	Router *chi.Mux
-	// Db, config can be added here
-}
+	// Middlewares
+	app.Use(middleware.Logger)
 
-func createNewServer() *Server {
-	s := &Server{}
-	s.Router = chi.NewRouter()
-	return s
-}
+	// Routes
+	app.Route("/api", routes.Mount)
 
-func (s *Server) mountHandlers() {
-	// Mount all Middlewares here
-	s.Router.Use(middleware.Logger)
-
-	// Mount all handlers here
-	s.Router.Get("/", helloWorld)
+	fmt.Printf("🚀 Server running on localhost:%s\n", configs.GetServerEnv().PORT)
+	http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerEnv().PORT), app)
 }

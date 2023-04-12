@@ -5,6 +5,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/lucasscarioca/music-stash-server/configs"
+	"github.com/lucasscarioca/music-stash-server/routes"
 	"github.com/stretchr/testify/require"
 )
 
@@ -12,9 +15,9 @@ import (
 // then executes the resquest by calling serveHTTP in the router
 // after which the handler writes the response to the response recorder
 // which we can inspect.
-func executeRequest(req *http.Request, s *Server) *httptest.ResponseRecorder {
+func executeRequest(req *http.Request, s chi.Router) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
-	s.Router.ServeHTTP(rr, req)
+	s.ServeHTTP(rr, req)
 
 	return rr
 }
@@ -28,13 +31,16 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 }
 
 func TestHelloWorld(t *testing.T) {
-	// Create a New Server Struct
-	s := createNewServer()
-	// Mount Handlers
-	s.mountHandlers()
+	err := configs.Load()
+	if err != nil {
+		t.Errorf("Could not initialize environment variables: %s", err.Error())
+	}
+	s := chi.NewRouter()
+
+	s.Route("/api", routes.Mount)
 
 	// Create a New Request
-	req, _ := http.NewRequest("GET", "/", nil)
+	req, _ := http.NewRequest("GET", "/api/users", nil)
 
 	// Execute Request
 	response := executeRequest(req, s)
