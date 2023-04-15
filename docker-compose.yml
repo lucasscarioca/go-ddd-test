@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  db:
+    container_name: music_stash
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_DB}
+  

@@ -7,14 +7,14 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/lucasscarioca/music-stash-server/configs"
+	"github.com/lucasscarioca/music-stash-server/db"
 	"github.com/lucasscarioca/music-stash-server/routes"
 )
 
 func main() {
-	err := configs.Load()
-	if err != nil {
-		panic("Failed to load environment variables: " + err.Error())
-	}
+	configs.Load()
+
+	db.Connect()
 
 	app := chi.NewRouter()
 

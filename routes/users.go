@@ -1,13 +1,12 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
+	"github.com/lucasscarioca/music-stash-server/controller"
 )
 
 func UserRoutes(r chi.Router) {
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
+	r.Get("/", newHandlerFunc(controller.FindUser))
+
+	r.Post("/", newHandlerFunc(controller.CreateUser))
 }

@@ -1,6 +1,10 @@
 package configs
 
-import "github.com/spf13/viper"
+import (
+	"log"
+
+	"github.com/spf13/viper"
+)
 
 var cfg *Config
 
@@ -14,28 +18,23 @@ type APIConfig struct {
 }
 
 type DBConfig struct {
-	HOST     string
-	PORT     string
-	USER     string
-	PASS     string
-	DATABASE string
+	URL string
 }
 
 func setDefaults() {
 	// SERVER
 	viper.SetDefault("PORT", "3000")
-
 	// DB
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("DB_HOST", "localhost")
 }
 
-func Load() error {
+func Load() {
 	setDefaults()
 	viper.SetConfigFile(".env")
 	err := viper.ReadInConfig()
 	if err != nil {
-		return err
+		log.Fatal("Failed to load environment variables: " + err.Error())
 	}
 
 	cfg = new(Config)
@@ -44,14 +43,8 @@ func Load() error {
 		PORT: viper.GetString("PORT"),
 	}
 	cfg.DB = DBConfig{
-		HOST:     viper.GetString("DB_HOST"),
-		PORT:     viper.GetString("DB_PORT"),
-		USER:     viper.GetString("DB_USER"),
-		PASS:     viper.GetString("DB_PASS"),
-		DATABASE: viper.GetString("DB_NAME"),
+		URL: viper.GetString("DB_URL"),
 	}
-
-	return nil
 }
 
 func GetDBEnv() DBConfig {

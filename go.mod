@@ -4,9 +4,11 @@ go 1.20
 
 require (
 	github.com/go-chi/chi/v5 v5.0.8
+	github.com/google/uuid v1.3.0
 	github.com/lib/pq v1.10.7
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
 )
 
 require (

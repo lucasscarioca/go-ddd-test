@@ -3,27 +3,29 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 	"github.com/lucasscarioca/music-stash-server/configs"
 )
 
-func OpenConnection() (*sql.DB, error) {
-	dbConfigs := configs.GetDBEnv()
+var Conn *sql.DB
 
-	sc := fmt.Sprintf("host=%s port =%s user=%s password=%s dbname=%s sslmode=disable",
-		dbConfigs.HOST, dbConfigs.PORT, dbConfigs.USER, dbConfigs.PASS, dbConfigs.DATABASE)
-
-	conn, err := sql.Open("postgres", sc)
+func Connect() {
+	var err error
+	dbConfig := configs.GetDBEnv()
+	Conn, err = sql.Open("postgres", dbConfig.URL)
 	if err != nil {
-		return nil, err
+		log.Fatal(err.Error())
 	}
 
-	err = conn.Ping()
+	if err := Conn.Ping(); err != nil {
+		log.Fatal(err.Error())
+	}
 
-	// conn.SetConnMaxLifetime(time.Duration(10) * time.Second)
-	// conn.SetMaxIdleConns(5)
-	// conn.SetMaxOpenConns(2)
+	// Conn.SetConnMaxLifetime(time.Duration(10) * time.Second)
+	// Conn.SetMaxIdleConns(5)
+	// Conn.SetMaxOpenConns(2)
 
-	return conn, err
+	fmt.Println("Connected to database...")
 }
