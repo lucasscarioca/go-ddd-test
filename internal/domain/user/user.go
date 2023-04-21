@@ -1,4 +1,4 @@
-package dto
+package user
 
 import (
 	"time"
@@ -43,4 +43,30 @@ func NewUser(name, email, password string) (*User, error) {
 		Password:  string(hashedPass),
 		CreatedAt: time.Now().UTC(),
 	}, nil
+}
+
+func (u *User) ToUserResponse() *UserResponse {
+	return &UserResponse{
+		ID:        u.ID,
+		Name:      u.Name,
+		Email:     u.Email,
+		CreatedAt: u.CreatedAt,
+	}
+}
+
+func (u *User) Update(userData *UserRequest) error {
+	if userData.Name != "" {
+		u.Name = userData.Name
+	}
+	if userData.Email != "" {
+		u.Email = userData.Email
+	}
+	if userData.Password != "" {
+		hashedPass, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		u.Password = string(hashedPass)
+	}
+	return nil
 }

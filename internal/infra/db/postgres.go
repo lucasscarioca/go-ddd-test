@@ -9,23 +9,26 @@ import (
 	"github.com/lucasscarioca/music-stash-server/configs"
 )
 
-var Conn *sql.DB
+var conn *sql.DB
 
 func Connect() {
 	var err error
-	dbConfig := configs.GetDBEnv()
-	Conn, err = sql.Open("postgres", dbConfig.URL)
+	conn, err = sql.Open("postgres", configs.GetDbURL())
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	if err := Conn.Ping(); err != nil {
+	if err := conn.Ping(); err != nil {
 		log.Fatal(err.Error())
 	}
 
-	// Conn.SetConnMaxLifetime(time.Duration(10) * time.Second)
-	// Conn.SetMaxIdleConns(5)
-	// Conn.SetMaxOpenConns(2)
+	// conn.SetConnMaxLifetime(time.Duration(10) * time.Second)
+	// conn.SetMaxIdleConns(5)
+	// conn.SetMaxOpenConns(2)
 
 	fmt.Println("Connected to database...")
+}
+
+func GetDbConnection() *sql.DB {
+	return conn
 }

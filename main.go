@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/lucasscarioca/music-stash-server/configs"
-	"github.com/lucasscarioca/music-stash-server/db"
-	"github.com/lucasscarioca/music-stash-server/routes"
+	"github.com/lucasscarioca/music-stash-server/internal/application"
+	userStorage "github.com/lucasscarioca/music-stash-server/internal/domain/user/storage"
+	"github.com/lucasscarioca/music-stash-server/internal/infra/db"
 )
 
 func main() {
@@ -16,14 +13,11 @@ func main() {
 
 	db.Connect()
 
-	app := chi.NewRouter()
+	httpServer := chi.NewRouter()
 
-	// Middlewares
-	app.Use(middleware.Logger)
+	userPostgresRepository := userStorage.NewPostgresRepository()
 
-	// Routes
-	app.Route("/api", routes.Mount)
+	app := application.NewApp(httpServer, userPostgresRepository)
 
-	fmt.Printf("🚀 Server running on localhost:%s\n", configs.GetServerEnv().PORT)
-	http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerEnv().PORT), app)
+	app.StartServer()
 }

@@ -1,4 +1,7 @@
+.vscode/
+
 tmp/
 vendor/
+bin/
 
 .env

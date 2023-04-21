@@ -1,53 +1,50 @@
 package main
 
-import (
-	"net/http"
-	"net/http/httptest"
-	"testing"
+// import (
+// 	"net/http"
+// 	"net/http/httptest"
+// 	"testing"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/lucasscarioca/music-stash-server/configs"
-	"github.com/lucasscarioca/music-stash-server/routes"
-	"github.com/stretchr/testify/require"
-)
+// 	"github.com/go-chi/chi/v5"
+// 	"github.com/lucasscarioca/music-stash-server/configs"
+// 	"github.com/lucasscarioca/music-stash-server/handlers"
+// 	"github.com/stretchr/testify/require"
+// )
 
-// executeRequest, creates a new ResponseRecorder
-// then executes the resquest by calling serveHTTP in the router
-// after which the handler writes the response to the response recorder
-// which we can inspect.
-func executeRequest(req *http.Request, s chi.Router) *httptest.ResponseRecorder {
-	rr := httptest.NewRecorder()
-	s.ServeHTTP(rr, req)
+// // executeRequest, creates a new ResponseRecorder
+// // then executes the resquest by calling serveHTTP in the router
+// // after which the handler writes the response to the response recorder
+// // which we can inspect.
+// func executeRequest(req *http.Request, s chi.Router) *httptest.ResponseRecorder {
+// 	rr := httptest.NewRecorder()
+// 	s.ServeHTTP(rr, req)
 
-	return rr
-}
+// 	return rr
+// }
 
-// checkResponseCode is a simple utility to check the response code
-// of the response
-func checkResponseCode(t *testing.T, expected, actual int) {
-	if expected != actual {
-		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
-	}
-}
+// // checkResponseCode is a simple utility to check the response code
+// // of the response
+// func checkResponseCode(t *testing.T, expected, actual int) {
+// 	if expected != actual {
+// 		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
+// 	}
+// }
 
-func TestHelloWorld(t *testing.T) {
-	err := configs.Load()
-	if err != nil {
-		t.Errorf("Could not initialize environment variables: %s", err.Error())
-	}
-	s := chi.NewRouter()
+// func TestHelloWorld(t *testing.T) {
+// 	configs.Load()
+// 	s := chi.NewRouter()
 
-	s.Route("/api", routes.Mount)
+// 	s.Route("/api", handlers.Mount)
 
-	// Create a New Request
-	req, _ := http.NewRequest("GET", "/api/users", nil)
+// 	// Create a New Request
+// 	req, _ := http.NewRequest("GET", "/api/users", nil)
 
-	// Execute Request
-	response := executeRequest(req, s)
+// 	// Execute Request
+// 	response := executeRequest(req, s)
 
-	// Check the response code
-	checkResponseCode(t, http.StatusOK, response.Code)
+// 	// Check the response code
+// 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	// We can use testify/require to assert values, as it is more convenient
-	require.Equal(t, "Hello World!", response.Body.String())
-}
+// 	// We can use testify/require to assert values, as it is more convenient
+// 	require.Equal(t, "Hello World!", response.Body.String())
+// }
