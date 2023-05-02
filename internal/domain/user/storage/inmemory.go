@@ -49,16 +49,13 @@ func (mr *MemoryRepository) List() ([]*u.UserResponse, error) {
 	return users, nil
 }
 
-func (mr *MemoryRepository) Update(id uuid.UUID, user *u.UserRequest) (*u.UserResponse, error) {
+func (mr *MemoryRepository) Update(id uuid.UUID, user *u.UserUpdateRequest) (*u.UserResponse, error) {
 	foundUser, ok := mr.users[id]
 	if !ok {
 		return nil, u.ErrUpdateUser
 	}
 
-	err := foundUser.Update(user)
-	if err != nil {
-		return nil, u.ErrUpdateUser
-	}
+	foundUser.Update(user)
 
 	mr.Lock()
 	mr.users[id] = foundUser

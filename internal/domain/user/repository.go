@@ -10,7 +10,7 @@ type Repository interface {
 	Create(*User) (*UserResponse, error)
 	Find(uuid.UUID) (*UserResponse, error)
 	List() ([]*UserResponse, error)
-	Update(uuid.UUID, *UserRequest) (*UserResponse, error)
+	Update(uuid.UUID, *UserUpdateRequest) (*UserResponse, error)
 	Delete(uuid.UUID) error
 }
 

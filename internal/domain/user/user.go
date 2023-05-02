@@ -15,9 +15,18 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-type UserRequest struct {
+type UserCreateRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type UserUpdateRequest struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+type UpdatePassword struct {
 	Password string `json:"password"`
 }
 
@@ -54,19 +63,20 @@ func (u *User) ToUserResponse() *UserResponse {
 	}
 }
 
-func (u *User) Update(userData *UserRequest) error {
+func (u *UserUpdateRequest) Update(userData *UserResponse) {
+	if u.Name == "" {
+		u.Name = userData.Name
+	}
+	if u.Email == "" {
+		u.Email = userData.Email
+	}
+}
+
+func (u *User) Update(userData *UserUpdateRequest) {
 	if userData.Name != "" {
 		u.Name = userData.Name
 	}
 	if userData.Email != "" {
 		u.Email = userData.Email
 	}
-	if userData.Password != "" {
-		hashedPass, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
-		if err != nil {
-			return err
-		}
-		u.Password = string(hashedPass)
-	}
-	return nil
 }
